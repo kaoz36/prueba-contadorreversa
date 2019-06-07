@@ -7,17 +7,6 @@ var nuevoHoras = 0;
 var nuevoMinutos = 0;
 var nuevoSegundos = 0;
 
-/*
-function sleep (time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
-}
-
-const doSomething = async () => {
-    await sleep(1000);
-    this.restarSegundos();
-    console.log(dias + ":" + horas + ":" + minutos + ":" + segundos);
-}*/
-
 class ContadorContainer extends Component {
 
     componentDidMount() {
@@ -35,17 +24,16 @@ class ContadorContainer extends Component {
     }
 
     initTimer() {
-        while (nuevoDias >= 0 && nuevoHoras >= 0) {
-            this.restarMinutos();
-            console.log(nuevoDias + ":" + nuevoHoras + ":" + nuevoMinutos + ":" + nuevoSegundos);
-        }
+        this.timer = setInterval(() => {
+            this.restarSegundos();
+        }, 1000);
     } 
     
     restarSegundos() {
         nuevoSegundos--;
         if (nuevoSegundos < 1) {
-            this.restarMinutos();
             nuevoSegundos = 59;
+            this.restarMinutos();
         }
         this.setState( {segundos: nuevoSegundos} );
     }
@@ -53,8 +41,8 @@ class ContadorContainer extends Component {
     restarMinutos() {
         nuevoMinutos--;
         if (nuevoMinutos < 1) {
-            this.restarHoras();
             nuevoMinutos = 59;
+            this.restarHoras();
         }
         this.setState( {minutos: nuevoMinutos} );
     }
@@ -62,15 +50,24 @@ class ContadorContainer extends Component {
     restarHoras() {
         nuevoHoras--;
         if (nuevoHoras < 1) {
-            this.restarDias();
             nuevoHoras = 23;
+            this.restarDias();
         }
         this.setState( {horas: nuevoHoras} );
+        
     }
 
     restarDias() {
         nuevoDias--;
-        this.setState( {dias: nuevoDias} );
+        if (nuevoDias === -1) {
+            clearInterval(this.timer);
+            nuevoDias = 0;
+            nuevoHoras = 0;
+            nuevoMinutos = 0;
+            nuevoSegundos = 0;
+        } else {
+            this.setState( {dias: nuevoDias} );
+        }
     }
     
     render() {
@@ -78,16 +75,16 @@ class ContadorContainer extends Component {
             <Grid>
                 <Row>
                     <Col>
-                        <ContadorComponent nombre='dia' unidad={this.state.dias}/>
+                        <ContadorComponent unidad='Days' valor={this.state.dias}/>
                     </Col>
                     <Col>
-                        <ContadorComponent nombre='hora' unidad={this.state.horas}/>
+                        <ContadorComponent unidad='Hours' valor={this.state.horas}/>
                     </Col>
                     <Col>
-                        <ContadorComponent nombre='minuto' unidad={this.state.minutos}/>
+                        <ContadorComponent unidad='Minutes' valor={this.state.minutos}/>
                     </Col>
                     <Col>
-                        <ContadorComponent nombre='segundo' unidad={this.state.segundos}/>
+                        <ContadorComponent unidad='Seconds' valor={this.state.segundos}/>
                     </Col>
                 </Row>
             </Grid>            

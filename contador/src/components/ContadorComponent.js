@@ -4,11 +4,16 @@ import './styles.css';
 class ContadorComponent extends Component {
 
     render() {
-        const { nombre, unidad } = this.props;
+        const { valor, unidad } = this.props;
         return (
             <div className="contador">
-                <h2>{nombre}</h2>
-                <h1>{unidad}</h1>
+                <div className="textValor">
+                    {valor}
+                </div>
+                <div className="textUnidad">
+                    {unidad}
+                </div>
+                
             </div>
             
         );
